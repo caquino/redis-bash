@@ -4,15 +4,19 @@
 # Oct 2011
 
 function redis-client() {
-    if [ ${#} -eq 2 ] 
+    if [ ${#} -ge 2 ] 
     then
-        BUFFER=( $(echo $2) )
-        printf "*${#BUFFER[@]}\r\n" >&${1}
-        for part in ${BUFFER[@]}
-        do
-            printf "\$${#part}\r\n" >&${1}
-            printf "${part}\r\n" >&${1}
-        done
+        COMMAND=${2%% *}
+        PAYLOAD=${2#* }
+        TAG=${PAYLOAD%% *}
+        COUNT=2
+        PAYLOAD=${PAYLOAD#* }
+        PAYLOAD=${PAYLOAD//${TAG}/}
+        [ "${PAYLOAD}" != "" ] && COUNT=3
+        printf "*${COUNT}\r\n" >&${1}
+        printf "\$${#COMMAND}\r\n${COMMAND}\r\n" >&${1}
+        printf "\$${#TAG}\r\n${TAG}\r\n" >&${1}
+        [ "${PAYLOAD}" != "" ] && printf "\$${#PAYLOAD}\r\n${PAYLOAD}\r\n" >&${1}
         sleep 0.01
     fi
     read -u ${1}
@@ -21,21 +25,24 @@ function redis-client() {
             ARGV=( "${REPLY//[^0-9\-]/}" );;
         \$*) # message size
             [ ${REPLY//[^0-9\-]/} -gt 0 ] && read -N $[${REPLY//[^0-9\-]/}+2] -u ${1} # read again to get the value itself
-            ARGV=( "${REPLY%$'\r'}" );;
+            ARGV=( "${REPLY//[$'\r'$'\n']}" );;
         :*) # integer message
-            ARGV=( "${REPLY#:}" );; 
+            ARGV=( "${REPLY//[^0-9\-]/}" );; 
         \**) # bulk reply - recursive based on number of messages
             [ ${REPLY//[^0-9]} -eq 0 ] && ARGV=(0)
             while [ ${#ARGV[@]} -lt ${REPLY//[^0-9]/} ]
             do
                 BUFFER=$(redis-client ${1})
-                ARGV=("${ARGV[@]}" "${BUFFER%$'\r'}")
+                ARGV=("${ARGV[@]}" "${BUFFER//[$'\r'$'\n']/}")
             done;;
         +*) # standard message
             ARGV=( "${REPLY#+}" );;
         -*) # error message
             ARGV=( "${REPLY#-}" );;
     esac
-    echo ${ARGV[@]}
+    for ((i=0; i<${#ARGV[@]}; i++))
+    do
+        printf "%s\n" "${ARGV[${i}]}"
+    done
     unset ARGV
 }

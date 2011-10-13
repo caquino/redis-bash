@@ -21,5 +21,6 @@ else
     exit 255
 fi
 [ "${REDISDB}" != "" ] && redis-client 6 "SELECT ${REDISDB}" > /dev/null
-redis-client 6 "$*"
+ARGV=$(redis-client 6 "$*")
+echo ${ARGV[*]}
 exec 6>&- #close fd

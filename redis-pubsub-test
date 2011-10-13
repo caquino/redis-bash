@@ -6,17 +6,20 @@
 # ./redis-bash-cli -h localhost PUBLISH testchannel Hello World
 # Cassiano Aquino - cassiano.aquino@me.com
 # Oct 2011
+
 source redis-bash-lib
 
 exec 5>&-
 exec 5<>/dev/tcp/localhost/6379
-redis-client 5 "SUBSCRIBE ${1}" > /dev/null # subscribe to the pubsub channel in fd 5
+ARGV=$(redis-client 5 "SUBSCRIBE ${1}") # subscribe to the pubsub channel in fd 5
+unset ARGV
 while true
 do
-    ARGS=( $(redis-client 5) )
-    if [ "${ARGS[0]}" = "message" ] || [ "${ARGS[1]}" = "${1}" ]
+    IFS=$'\n'
+    ARGV=($(redis-client 5))
+    if [ "${ARGV[0]}" = "message" ] && [ "${ARGV[1]}" = "${1}" ]
     then
-        echo "Message from pubsub channel: ${ARGS[2]}"
+        echo "Message from pubsub channel: ${ARGV[2]}"
     fi
-    unset ARGS
+    unset ARGV
 done
