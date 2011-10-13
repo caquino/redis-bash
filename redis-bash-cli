@@ -1,0 +1,25 @@
+#!/bin/bash
+# Cassiano Aquino - cassianoaquino@me.com
+# Oct 2011
+
+source redis-bash-lib
+REDISPORT=6379
+while getopts ":h:n:p" opt
+do
+    case ${opt} in
+        h) REDISHOST=${OPTARG};;
+        n) REDISDB=${OPTARG};;
+        p) REDISPORT=${OPTARG};;
+    esac
+done
+shift $((${OPTIND} - 1))
+if [ "${REDISHOST}" != "" ] && [ "${REDISPORT}" != "" ]
+then
+    exec 6<>/dev/tcp/${REDISHOST}/${REDISPORT} # open fd
+else
+    echo "Wrong arguments"
+    exit 255
+fi
+[ "${REDISDB}" != "" ] && redis-client 6 "SELECT ${REDISDB}" > /dev/null
+redis-client 6 "$*"
+exec 6>&- #close fd

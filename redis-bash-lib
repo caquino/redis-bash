@@ -1,0 +1,41 @@
+#!/bin/bash
+# redis protocol implementation in bash
+# Cassiano Aquino - cassianoaquino@me.com
+# Oct 2011
+
+function redis-client() {
+    if [ ${#} -eq 2 ] 
+    then
+        BUFFER=( $(echo $2) )
+        printf "*${#BUFFER[@]}\r\n" >&${1}
+        for part in ${BUFFER[@]}
+        do
+            printf "\$${#part}\r\n" >&${1}
+            printf "${part}\r\n" >&${1}
+        done
+        sleep 0.01
+    fi
+    read -u ${1}
+    case ${REPLY%$'\r'} in # chomp
+        \$-*) # error
+            ARGV=( "${REPLY//[^0-9\-]/}" );;
+        \$*) # message size
+            [ ${REPLY//[^0-9\-]/} -gt 0 ] && read -N $[${REPLY//[^0-9\-]/}+2] -u ${1} # read again to get the value itself
+            ARGV=( "${REPLY%$'\r'}" );;
+        :*) # integer message
+            ARGV=( "${REPLY#:}" );; 
+        \**) # bulk reply - recursive based on number of messages
+            [ ${REPLY//[^0-9]} -eq 0 ] && ARGV=(0)
+            while [ ${#ARGV[@]} -lt ${REPLY//[^0-9]/} ]
+            do
+                BUFFER=$(redis-client ${1})
+                ARGV=("${ARGV[@]}" "${BUFFER%$'\r'}")
+            done;;
+        +*) # standard message
+            ARGV=( "${REPLY#+}" );;
+        -*) # error message
+            ARGV=( "${REPLY#-}" );;
+    esac
+    echo ${ARGV[@]}
+    unset ARGV
+}
