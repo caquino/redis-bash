@@ -1,0 +1,3 @@
+Redis protocol implementation written in bash
+
+Tested under debian squeeze using bash 4.1
