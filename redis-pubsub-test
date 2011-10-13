@@ -1,0 +1,22 @@
+#!/bin/bash
+# Pubsub demo
+# run this file and publish one message to the channel
+# ./redis-pubsub-test testchannel
+# on another shell
+# ./redis-bash-cli -h localhost PUBLISH testchannel Hello World
+# Cassiano Aquino - cassiano.aquino@me.com
+# Oct 2011
+source redis-bash-lib
+
+exec 5>&-
+exec 5<>/dev/tcp/localhost/6379
+redis-client 5 "SUBSCRIBE ${1}" > /dev/null # subscribe to the pubsub channel in fd 5
+while true
+do
+    ARGS=( $(redis-client 5) )
+    if [ "${ARGS[0]}" = "message" ] || [ "${ARGS[1]}" = "${1}" ]
+    then
+        echo "Message from pubsub channel: ${ARGS[2]}"
+    fi
+    unset ARGS
+done
