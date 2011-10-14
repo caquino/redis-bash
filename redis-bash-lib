@@ -16,7 +16,7 @@
 #
 function arange() {
     local ARRAY=(${!1})
-    for ((i=${2};i<${3};i++))
+    for ((i=${2};i<=${3};i++))
     do
         ARGV=("${ARGV[@]}" "${ARRAY[${i}]}")
     done
@@ -86,12 +86,12 @@ function redis-client() {
         if [ ${COMMANDARGS} -ne 255 ]
         then
             local CMD="*$[${COMMANDARGS}+1]\r\n"
-            for ((i=0;i<=${COMMANDARGS};i++))
+            for ((i=0;i<${COMMANDARGS};i++))
             do
                 CMD="${CMD}\$${#ARRAY[${i}]}\r\n${ARRAY[${i}]}\r\n"
             done
-            local PARAMETERS=$(arange ARRAY[@] $[${COMMANDARGS}+1] ${#ARRAY[@]})
-            [ "${PARAMETERS}" != "" ] && CMD="${CMD}\r\n\$${#PARAMETERS}\r\n${PARAMETERS}"
+            local PARAMETERS=$(arange ARRAY[@] ${COMMANDARGS} ${#ARRAY[@]})
+            [ "${PARAMETERS}" != "" ] && CMD="${CMD}\$${#PARAMETERS}\r\n${PARAMETERS}\r\n"
             echo -ne "${CMD}" >&${1}
         else
             echo -ne "${ARRAY[*]}\r\n" >&${1}
