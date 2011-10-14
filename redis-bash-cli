@@ -20,5 +20,7 @@ else
     exit 255
 fi
 [ "${REDISDB}" != "" ] && redis-client 6 "SELECT ${REDISDB}" > /dev/null
-redis-client 6 "$*"
+ARGS=("$*")
+RETURN=$(redis-client 6 ARGS[@])
+echo ${RETURN}
 exec 6>&- #close fd

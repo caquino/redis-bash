@@ -3,21 +3,99 @@
 # Cassiano Aquino - cassianoaquino@me.com
 # Oct 2011
 
+# some array manipulation functions (originaly from redis.awk)
+# -- arange
+#
+#   returns a string containing array elements range
+#   for stop param it is allowed to give "end" value
+#
+# Args:
+#   array -- array
+#   start -- first index of range
+#   stop -- last index of range
+#
+function arange() {
+    local ARRAY=(${!1})
+    for ((i=${2};i<${3};i++))
+    do
+        ARGV=("${ARGV[@]}" "${ARRAY[${i}]}")
+    done
+    echo ${ARGV[@]}
+}
+
+# -- asearch
+#
+#   returns 1 if an array has an element with given value,
+#   returns 0 otherwise
+#
+# Args:
+#   array -- array
+#   value -- element value to search for
+#
+function asearch() {
+    local ARRAY=("${!1}")
+    shopt -s nocasematch
+    [[ "${ARRAY[*]}" =~ ${2} ]] && return 1
+    return 0
+}
+# -- asearchindex
+#
+#   returns the array index if an array has an element with given value,
+#   returns 255 otherwise
+#
+# Args:
+#   array -- array
+#   value -- element value to search for
+#
+function asearchindex() {
+    local ARRAY=("${!1}")
+    shopt -s nocasematch
+    for ((i=0;i<${#ARRAY[@]};i++))
+    do
+        [[ "${ARRAY[${i}]}" =~ ${2} ]] && return ${i}
+    done
+    return 255
+}
+
+# -- redis-client
+#
+#  returns an array 
+#
+# Args:
+# value -- file descriptor
+# value -- message to be sent (only read if blank)
+#
 function redis-client() {
-    if [ ${#} -ge 2 ] 
+    if [ ${#} -ge 2 ]
     then
-        COMMAND=${2%% *}
-        PAYLOAD=${2#* }
-        TAG=${PAYLOAD%% *}
-        COUNT=2
-        PAYLOAD=${PAYLOAD#* }
-        PAYLOAD=${PAYLOAD//${TAG}/}
-        [ "${PAYLOAD}" != "" ] && COUNT=3
-        printf "*${COUNT}\r\n" >&${1}
-        printf "\$${#COMMAND}\r\n${COMMAND}\r\n" >&${1}
-        printf "\$${#TAG}\r\n${TAG}\r\n" >&${1}
-        [ "${PAYLOAD}" != "" ] && printf "\$${#PAYLOAD}\r\n${PAYLOAD}\r\n" >&${1}
-        sleep 0.01
+        declare -a COMMANDS
+        COMMANDS[0]="ping save"
+        COMMANDS[1]="select get subscribe unsubscribe keys"
+        COMMANDS[2]="publish set expire"
+        COMMANDS[3]="zincrby"
+        local ARRAY
+        if [[ "${2}" =~ "@" ]]
+        then
+            ARRAY=(${!2})
+        else
+            ARRAY=( $(echo ${2}) )
+        fi
+        local COMMAND=${ARRAY[0]}
+        asearchindex COMMANDS[@] ${COMMAND}
+        local COMMANDARGS=$?
+        if [ ${COMMANDARGS} -ne 255 ]
+        then
+            local CMD="*$[${COMMANDARGS}+1]\r\n"
+            for ((i=0;i<=${COMMANDARGS};i++))
+            do
+                CMD="${CMD}\$${#ARRAY[${i}]}\r\n${ARRAY[${i}]}\r\n"
+            done
+            local PARAMETERS=$(arange ARRAY[@] $[${COMMANDARGS}+1] ${#ARRAY[@]})
+            [ "${PARAMETERS}" != "" ] && CMD="${CMD}\r\n\$${#PARAMETERS}\r\n${PARAMETERS}"
+            echo -ne "${CMD}" >&${1}
+        else
+            echo -ne "${ARRAY[*]}\r\n" >&${1}
+        fi
     fi
     read -u ${1}
     case ${REPLY%$'\r'} in # chomp
