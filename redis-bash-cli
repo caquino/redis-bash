@@ -1,7 +1,6 @@
 #!/bin/bash
 # Cassiano Aquino - cassianoaquino@me.com
 # Oct 2011
-
 source redis-bash-lib
 REDISPORT=6379
 while getopts ":h:n:p" opt
@@ -21,6 +20,5 @@ else
     exit 255
 fi
 [ "${REDISDB}" != "" ] && redis-client 6 "SELECT ${REDISDB}" > /dev/null
-ARGV=$(redis-client 6 "$*")
-echo ${ARGV[*]}
+redis-client 6 "$*"
 exec 6>&- #close fd
