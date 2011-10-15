@@ -3,41 +3,6 @@
 # Cassiano Aquino - cassianoaquino@me.com
 # Oct 2011
 
-# some array manipulation functions (originaly from redis.awk)
-# -- arange
-#
-#   returns a string containing array elements range
-#   for stop param it is allowed to give "end" value
-#
-# Args:
-#   array -- array
-#   start -- first index of range
-#   stop -- last index of range
-#
-function arange() {
-    local ARRAY=(${!1})
-    for ((i=${2};i<=${3};i++))
-    do
-        ARGV=("${ARGV[@]}" "${ARRAY[${i}]}")
-    done
-    echo ${ARGV[@]}
-}
-
-# -- asearch
-#
-#   returns 1 if an array has an element with given value,
-#   returns 0 otherwise
-#
-# Args:
-#   array -- array
-#   value -- element value to search for
-#
-function asearch() {
-    local ARRAY=("${!1}")
-    shopt -s nocasematch
-    [[ "${ARRAY[*]}" =~ ${2} ]] && return 1
-    return 0
-}
 # -- asearchindex
 #
 #   returns the array index if an array has an element with given value,
@@ -68,7 +33,6 @@ function asearchindex() {
 function redis-client() {
     if [ ${#} -ge 2 ]
     then
-        declare -a COMMANDS
         COMMANDS[0]="ping save"
         COMMANDS[1]="select get subscribe unsubscribe keys"
         COMMANDS[2]="publish set expire"
@@ -81,7 +45,7 @@ function redis-client() {
             ARRAY=( $(echo ${2}) )
         fi
         local COMMAND=${ARRAY[0]}
-        asearchindex COMMANDS[@] " ${COMMAND} "
+        asearchindex COMMANDS[@] "\b${COMMAND}\b"
         local COMMANDARGS=$?
         if [ ${COMMANDARGS} -ne 255 ]
         then
@@ -90,7 +54,7 @@ function redis-client() {
             do
                 CMD="${CMD}\$${#ARRAY[${i}]}\r\n${ARRAY[${i}]}\r\n"
             done
-            local PARAMETERS=$(arange ARRAY[@] ${COMMANDARGS} ${#ARRAY[@]})
+            local PARAMETERS=${ARRAY[@]:${COMMANDARGS}}
             [ "${PARAMETERS}" != "" ] && CMD="${CMD}\$${#PARAMETERS}\r\n${PARAMETERS}\r\n"
             echo -ne "${CMD}" >&${1}
         else
@@ -98,6 +62,7 @@ function redis-client() {
         fi
     fi
     read -u ${1}
+    local ARGV
     case ${REPLY%$'\r'} in # chomp
         \$-*) # error
             ARGV=( "${REPLY//[^0-9\-]/}" );;
@@ -118,9 +83,5 @@ function redis-client() {
         -*) # error message
             ARGV=( "${REPLY#-}" );;
     esac
-    for ((i=0; i<${#ARGV[@]}; i++))
-    do
-        printf "%s\n" "${ARGV[${i}]}"
-    done
-    unset ARGV
+    printf "%s\n" "${ARGV[@]}"
 }

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 # Pubsub demo
 # run this file and publish one message to the channel
 # ./redis-pubsub-test testchannel

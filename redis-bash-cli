@@ -1,14 +1,18 @@
-#!/bin/bash
+#!/bin/bash 
+#set -x
+#PS4='$(date "+%s.%N ($LINENO) + ")'
 # Cassiano Aquino - cassianoaquino@me.com
 # Oct 2011
 source redis-bash-lib
 REDISPORT=6379
-while getopts ":h:n:p" opt
+REPEAT=1
+while getopts ":h:n:p:r:" opt
 do
     case ${opt} in
         h) REDISHOST=${OPTARG};;
         n) REDISDB=${OPTARG};;
         p) REDISPORT=${OPTARG};;
+        r) REPEAT=${OPTARG};;
     esac
 done
 shift $((${OPTIND} - 1))
@@ -21,6 +25,8 @@ else
 fi
 [ "${REDISDB}" != "" ] && redis-client 6 "SELECT ${REDISDB}" > /dev/null
 ARGS=("$*")
-RETURN=$(redis-client 6 ARGS[@])
-echo ${RETURN}
+for ((z=1;z<=${REPEAT};z++))
+do
+    redis-client 6 ARGS[@] 
+done
 exec 6>&- #close fd
