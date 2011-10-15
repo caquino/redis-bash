@@ -3,6 +3,12 @@
 # Cassiano Aquino - cassianoaquino@me.com
 # Oct 2011
 
+# Supported commands (Tip: Array index is the number of parameters)
+COMMANDS[0]="ping save"
+COMMANDS[1]="select get subscribe unsubscribe keys"
+COMMANDS[2]="publish set expire"
+COMMANDS[3]="zincrby"
+
 # -- asearchindex
 #
 #   returns the array index if an array has an element with given value,
@@ -33,16 +39,12 @@ function asearchindex() {
 function redis-client() {
     if [ ${#} -ge 2 ]
     then
-        COMMANDS[0]="ping save"
-        COMMANDS[1]="select get subscribe unsubscribe keys"
-        COMMANDS[2]="publish set expire"
-        COMMANDS[3]="zincrby"
         local ARRAY
         if [[ "${2}" =~ "@" ]]
         then
             ARRAY=(${!2})
         else
-            ARRAY=( $(echo ${2}) )
+            ARRAY=( ${2} )
         fi
         local COMMAND=${ARRAY[0]}
         asearchindex COMMANDS[@] "\b${COMMAND}\b"
@@ -61,27 +63,26 @@ function redis-client() {
             echo -ne "${ARRAY[*]}\r\n" >&${1}
         fi
     fi
-    read -u ${1}
     local ARGV
-    case ${REPLY%$'\r'} in # chomp
-        \$-*) # error
-            ARGV=( "${REPLY//[^0-9\-]/}" );;
+    read -r -u ${1}
+    REPLY=${REPLY:0:${#REPLY}-1} 
+    case ${REPLY} in
         \$*) # message size
-            [ ${REPLY//[^0-9\-]/} -gt 0 ] && read -N $[${REPLY//[^0-9\-]/}+2] -u ${1} # read again to get the value itself
-            ARGV=( "${REPLY//[$'\r'$'\n']}" );;
+            [ ${REPLY:1} -gt 0 ] && read -r -N $[${REPLY:1}+2] -u ${1} # read again to get the value itself
+            ARGV=( "${REPLY:0:${#REPLY}-2}" );;
         :*) # integer message
-            ARGV=( "${REPLY//[^0-9\-]/}" );; 
+            ARGV=( "${REPLY:1}" );; 
         \**) # bulk reply - recursive based on number of messages
-            [ ${REPLY//[^0-9]} -eq 0 ] && ARGV=(0)
-            while [ ${#ARGV[@]} -lt ${REPLY//[^0-9]/} ]
+            ARGC="${REPLY:1}"
+            [ ${ARGC} -eq 0 ] && ARGV=(0)
+            while [ ${#ARGV[@]} -lt ${ARGC} ]
             do
-                BUFFER=$(redis-client ${1})
-                ARGV=("${ARGV[@]}" "${BUFFER//[$'\r'$'\n']/}")
+                ARGV=("${ARGV[@]}" $(redis-client ${1}))
             done;;
         +*) # standard message
-            ARGV=( "${REPLY#+}" );;
-        -*) # error message
-            ARGV=( "${REPLY#-}" );;
+            ARGV=( "${REPLY:1}" );;
+        -*|\$-*) # error message
+            ARGV=( "${REPLY:1}" );;
     esac
     printf "%s\n" "${ARGV[@]}"
 }

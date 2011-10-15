@@ -24,9 +24,9 @@ else
     exit 255
 fi
 [ "${REDISDB}" != "" ] && redis-client 6 "SELECT ${REDISDB}" > /dev/null
-ARGS=("$*")
+ARGS=( $@ )
 for ((z=1;z<=${REPEAT};z++))
 do
-    redis-client 6 ARGS[@] 
+    redis-client 6 ARGS[@]
 done
 exec 6>&- #close fd
