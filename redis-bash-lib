@@ -81,7 +81,7 @@ function redis-client() {
             ARRAY=( $(echo ${2}) )
         fi
         local COMMAND=${ARRAY[0]}
-        asearchindex COMMANDS[@] ${COMMAND}
+        asearchindex COMMANDS[@] " ${COMMAND} "
         local COMMANDARGS=$?
         if [ ${COMMANDARGS} -ne 255 ]
         then
