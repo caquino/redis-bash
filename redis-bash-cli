@@ -1,8 +1,9 @@
 #!/bin/bash 
-#set -x
-#PS4='$(date "+%s.%N ($LINENO) + ")'
 # Cassiano Aquino - cassianoaquino@me.com
 # Oct 2011
+# Poor man profiling - uncoment the next 2 lines
+#set -x
+#PS4='$(date "+%s.%N ($LINENO) + ")'
 source redis-bash-lib
 REDISPORT=6379
 REPEAT=1
@@ -28,7 +29,6 @@ for ((z=1;z<=${REPEAT};z++))
 do
     redis-client 6 "${@}"
     if [ $? -ne 0 ]; then
-        echo "Wrong number of parameters for command"
         exit 1
     fi
 done

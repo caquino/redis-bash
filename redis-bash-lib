@@ -3,28 +3,6 @@
 # Cassiano Aquino - cassianoaquino@me.com
 # Oct 2011
 
-# commands definition
-source redis-bash-cmdtable
-
-# -- asearchindex
-#
-#   returns the array index if an array has an element with given value,
-#   returns 255 otherwise
-#
-# Args:
-#   array -- array
-#   value -- element value to search for
-#
-function asearchindex() {
-    local ARRAY=("${!1}")
-    shopt -s nocasematch
-    for ((i=0;i<${#ARRAY[@]};i++))
-    do
-        [[ "${ARRAY[${i}]}" =~ ${2} ]] && return ${i}
-    done
-    return 255
-}
-
 # -- redis-client
 #
 #  returns an array
@@ -36,26 +14,13 @@ function asearchindex() {
 function redis-client() {
     FD=${1}
     shift;
-    if [ ${#} -ne 0 ]; then
+    if [ ${#} -ne 0 ]; then # always use unified protocol and let the server validate the number of parameters
         local ARRAY=( "${@}" )
-        asearchindex CMDTABLE[@] "\b${ARRAY[0]}\b"
-        CMDINDEX=${?}
-        if [ ${CMDINDEX} -ne 255 ]; then
-            COMMAND=${CMDTABLE[${CMDINDEX}]}
-            local COMMANDARGS=${COMMAND##*:}
-            if [ ${#ARRAY[@]} -lt 0 ]; then
-                [ ${#ARRAY[@]} -ge ${COMMANDARGS} ] && return 1
-            else
-                [ ${#ARRAY[@]} -ne ${COMMANDARGS} ] && return 1
-            fi
-            local CMD=("*$[${#ARRAY[@]}]")
-            for ((i=0;i<${#ARRAY[@]};i++)); do
-                CMD=( "${CMD[@]}" "\$${#ARRAY[${i}]}" "${ARRAY[${i}]}" )
-            done
-            printf "%s\r\n" "${CMD[@]}" >&${FD}
-        else
-            echo -ne "${ARRAY[*]}\r\n" >&${FD}
-        fi
+        local CMD=("*$[${#ARRAY[@]}]")
+        for ((i=0;i<${#ARRAY[@]};i++)); do
+            CMD=( "${CMD[@]}" "\$${#ARRAY[${i}]}" "${ARRAY[${i}]}" )
+        done
+        printf "%s\r\n" "${CMD[@]}" >&${FD}
     fi
     local ARGV
     read -r -u ${FD}
@@ -75,7 +40,8 @@ function redis-client() {
         +*) # standard message
             ARGV=( "${REPLY:1}" );;
         -*|\$-*) # error message
-            ARGV=( "${REPLY:1}" );;
+            echo "${REPLY:1}"
+            return 1;;
     esac
     printf "%s\n" "${ARGV[@]}"
 }
