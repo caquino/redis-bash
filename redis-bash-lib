@@ -3,11 +3,8 @@
 # Cassiano Aquino - cassianoaquino@me.com
 # Oct 2011
 
-# Supported commands (Tip: Array index is the number of parameters)
-COMMANDS[0]="ping save"
-COMMANDS[1]="select get subscribe unsubscribe keys"
-COMMANDS[2]="publish set expire"
-COMMANDS[3]="zincrby"
+# commands definition
+source redis-bash-lib-cmdtable
 
 # -- asearchindex
 #
@@ -37,33 +34,35 @@ function asearchindex() {
 # value -- message to be sent (only read if blank)
 #
 function redis-client() {
-    if [ ${#} -ge 2 ]; then
-        local ARRAY
-        if [[ "${2}" =~ "@" ]]; then
-            ARRAY=(${!2})
-        else
-            ARRAY=( ${2} )
-        fi
-        asearchindex COMMANDS[@] "\b${ARRAY[0]}\b"
-        local COMMANDARGS=$?
-        if [ ${COMMANDARGS} -ne 255 ]; then
-            local CMD=("*$[${COMMANDARGS}+1]")
-            for ((i=0;i<${COMMANDARGS};i++)); do
+    FD=${1}
+    shift;
+    if [ ${#} -ne 0 ]; then
+        local ARRAY=( "${@}" )
+        asearchindex CMDTABLE[@] "\b${ARRAY[0]}\b"
+        CMDINDEX=${?}
+        if [ ${CMDINDEX} -ne 255 ]; then
+            COMMAND=${CMDTABLE[${CMDINDEX}]}
+            local COMMANDARGS=${COMMAND##*:}
+            if [ ${#ARRAY[@]} -lt 0 ]; then
+                [ ${#ARRAY[@]} -ge ${COMMANDARGS} ] && return 1
+            else
+                [ ${#ARRAY[@]} -ne ${COMMANDARGS} ] && return 1
+            fi
+            local CMD=("*$[${#ARRAY[@]}]")
+            for ((i=0;i<${#ARRAY[@]};i++)); do
                 CMD=( "${CMD[@]}" "\$${#ARRAY[${i}]}" "${ARRAY[${i}]}" )
             done
-            local PARAMETERS=${ARRAY[@]:${COMMANDARGS}}
-            [ "${PARAMETERS}" != "" ] && CMD=( "${CMD[@]}" "\$${#PARAMETERS}" "${PARAMETERS}" )
-            printf "%s\r\n" "${CMD[@]}" >&${1}
+            printf "%s\r\n" "${CMD[@]}" >&${FD}
         else
-            echo -ne "${ARRAY[*]}\r\n" >&${1}
+            echo -ne "${ARRAY[*]}\r\n" >&${FD}
         fi
     fi
     local ARGV
-    read -r -u ${1}
+    read -r -u ${FD}
     REPLY=${REPLY:0:${#REPLY}-1}
     case ${REPLY} in
         \$*) # message size
-            [ ${REPLY:1} -gt 0 ] && read -r -N $[${REPLY:1}+2] -u ${1} # read again to get the value itself
+            [ ${REPLY:1} -gt 0 ] && read -r -N $[${REPLY:1}+2] -u ${FD} # read again to get the value itself
             ARGV=( "${REPLY:0:${#REPLY}-2}" );;
         :*) # integer message
             ARGV=( "${REPLY:1}" );;
@@ -71,7 +70,7 @@ function redis-client() {
             ARGC="${REPLY:1}"
             [ ${ARGC} -eq 0 ] && ARGV=(0)
             while [ ${#ARGV[@]} -lt ${ARGC} ]; do
-                ARGV=("${ARGV[@]}" $(redis-client ${1}))
+                ARGV=("${ARGV[@]}" $(redis-client ${FD}))
             done;;
         +*) # standard message
             ARGV=( "${REPLY:1}" );;
