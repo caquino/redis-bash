@@ -30,18 +30,16 @@ function asearchindex() {
 
 # -- redis-client
 #
-#  returns an array 
+#  returns an array
 #
 # Args:
 # value -- file descriptor
 # value -- message to be sent (only read if blank)
 #
 function redis-client() {
-    if [ ${#} -ge 2 ]
-    then
+    if [ ${#} -ge 2 ]; then
         local ARRAY
-        if [[ "${2}" =~ "@" ]]
-        then
+        if [[ "${2}" =~ "@" ]]; then
             ARRAY=(${!2})
         else
             ARRAY=( ${2} )
@@ -49,11 +47,9 @@ function redis-client() {
         local COMMAND=${ARRAY[0]}
         asearchindex COMMANDS[@] "\b${COMMAND}\b"
         local COMMANDARGS=$?
-        if [ ${COMMANDARGS} -ne 255 ]
-        then
+        if [ ${COMMANDARGS} -ne 255 ]; then
             local CMD="*$[${COMMANDARGS}+1]\r\n"
-            for ((i=0;i<${COMMANDARGS};i++))
-            do
+            for ((i=0;i<${COMMANDARGS};i++)); do
                 CMD="${CMD}\$${#ARRAY[${i}]}\r\n${ARRAY[${i}]}\r\n"
             done
             local PARAMETERS=${ARRAY[@]:${COMMANDARGS}}
@@ -65,18 +61,17 @@ function redis-client() {
     fi
     local ARGV
     read -r -u ${1}
-    REPLY=${REPLY:0:${#REPLY}-1} 
+    REPLY=${REPLY:0:${#REPLY}-1}
     case ${REPLY} in
         \$*) # message size
             [ ${REPLY:1} -gt 0 ] && read -r -N $[${REPLY:1}+2] -u ${1} # read again to get the value itself
             ARGV=( "${REPLY:0:${#REPLY}-2}" );;
         :*) # integer message
-            ARGV=( "${REPLY:1}" );; 
+            ARGV=( "${REPLY:1}" );;
         \**) # bulk reply - recursive based on number of messages
             ARGC="${REPLY:1}"
             [ ${ARGC} -eq 0 ] && ARGV=(0)
-            while [ ${#ARGV[@]} -lt ${ARGC} ]
-            do
+            while [ ${#ARGV[@]} -lt ${ARGC} ]; do
                 ARGV=("${ARGV[@]}" $(redis-client ${1}))
             done;;
         +*) # standard message
