@@ -44,17 +44,16 @@ function redis-client() {
         else
             ARRAY=( ${2} )
         fi
-        local COMMAND=${ARRAY[0]}
-        asearchindex COMMANDS[@] "\b${COMMAND}\b"
+        asearchindex COMMANDS[@] "\b${ARRAY[0]}\b"
         local COMMANDARGS=$?
         if [ ${COMMANDARGS} -ne 255 ]; then
-            local CMD="*$[${COMMANDARGS}+1]\r\n"
+            local CMD=("*$[${COMMANDARGS}+1]")
             for ((i=0;i<${COMMANDARGS};i++)); do
-                CMD="${CMD}\$${#ARRAY[${i}]}\r\n${ARRAY[${i}]}\r\n"
+                CMD=( "${CMD[@]}" "\$${#ARRAY[${i}]}" "${ARRAY[${i}]}" )
             done
             local PARAMETERS=${ARRAY[@]:${COMMANDARGS}}
-            [ "${PARAMETERS}" != "" ] && CMD="${CMD}\$${#PARAMETERS}\r\n${PARAMETERS}\r\n"
-            echo -ne "${CMD}" >&${1}
+            [ "${PARAMETERS}" != "" ] && CMD=( "${CMD[@]}" "\$${#PARAMETERS}" "${PARAMETERS}" )
+            printf "%s\r\n" "${CMD[@]}" >&${1}
         else
             echo -ne "${ARRAY[*]}\r\n" >&${1}
         fi
