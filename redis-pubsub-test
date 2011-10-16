@@ -1,12 +1,9 @@
 #!/bin/bash 
-# Pubsub demo
-# run this file and publish one message to the channel
+# https://github.com/caquino/redis-bash
+# run this file passing the channel to subscribe as argument
 # ./redis-pubsub-test testchannel
-# on another shell
+# and on another shell publish a message on the same channel
 # ./redis-bash-cli -h localhost PUBLISH testchannel Hello World
-# Cassiano Aquino - cassiano.aquino@me.com
-# Oct 2011
-
 source redis-bash-lib
 while true
 do
