@@ -1,7 +1,5 @@
 #!/bin/bash
-# redis protocol implementation in bash
-# Cassiano Aquino - cassianoaquino@me.com
-# Oct 2011
+# https://github.com/caquino/redis-bash
 
 # -- redis-client
 #

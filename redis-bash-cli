@@ -1,6 +1,5 @@
 #!/bin/bash 
-# Cassiano Aquino - cassianoaquino@me.com
-# Oct 2011
+# https://github.com/caquino/redis-bash
 # Poor man profiling - uncoment the next 2 lines
 #set -x
 #PS4='$(date "+%s.%N ($LINENO) + ")'
