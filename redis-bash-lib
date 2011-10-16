@@ -4,7 +4,7 @@
 # Oct 2011
 
 # commands definition
-source redis-bash-lib-cmdtable
+source redis-bash-cmdtable
 
 # -- asearchindex
 #
