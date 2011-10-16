@@ -42,6 +42,8 @@ function redis-client() {
         -*|\$-*) # error message
             echo "${REPLY:1}"
             return 1;;
+        *) # wtf? just in case...
+            ARGV=( "${ARGV[@]}" "${REPLY}" );;
     esac
     printf "%s\n" "${ARGV[@]}"
 }
