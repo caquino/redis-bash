@@ -12,7 +12,7 @@ while true
 do
     exec 5>&-
     exec 5<>/dev/tcp/localhost/6379
-    redis-client 5 "SUBSCRIBE ${1}" > /dev/null # subscribe to the pubsub channel in fd 5
+    redis-client 5 SUBSCRIBE ${1} > /dev/null # subscribe to the pubsub channel in fd 5
     while true
     do
         unset ARGV
