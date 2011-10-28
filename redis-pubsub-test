@@ -4,7 +4,7 @@
 # ./redis-pubsub-test testchannel
 # and on another shell publish a message on the same channel
 # ./redis-bash-cli -h localhost PUBLISH testchannel Hello World
-source redis-bash-lib
+source /usr/share/redis-bash/redis-bash-lib
 while true
 do
     exec 5>&-

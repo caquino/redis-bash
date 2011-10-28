@@ -3,7 +3,7 @@
 # Poor man profiling - uncoment the next 2 lines
 #set -x
 #PS4='$(date "+%s.%N ($LINENO) + ")'
-source redis-bash-lib
+source /usr/share/redis-bash/redis-bash-lib
 REDISPORT=6379
 REPEAT=1
 while getopts ":h:n:p:r:" opt
