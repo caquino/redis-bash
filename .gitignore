@@ -1,0 +1,5 @@
+debian/files
+debian/redis-bash.debhelper.log
+debian/redis-bash.substvars
+debian/redis-bash/
+debian/source/
