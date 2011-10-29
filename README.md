@@ -12,10 +12,10 @@ Using the client and the pubsub demo
 redis-bash-cli \<PARAMETERS\> \<COMMAND\> \<ARGUMENTS\>
 
 Parameters:
-	-h Host - Defaults localhost
-	-p Port - Defaults 6379
-	-n DB - Select the database DB
-	-r N - Repeat command N times
+    -h Host - Defaults localhost
+    -p Port - Defaults 6379
+    -n DB - Select the database DB
+    -r N - Repeat command N times
 	
 
 redis-pubsub-test \<CHANNEL\>
