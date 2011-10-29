@@ -67,6 +67,7 @@ Using the library:
 # TODO
 * manual page
 * tests
+* documentation
 
 # LICENSE
 * BSD
