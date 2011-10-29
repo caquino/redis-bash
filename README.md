@@ -42,9 +42,10 @@ Examples:
 	redis-pubsub-test <CHANNEL>
 	
 Parameters:
-	* CHANNEL - Channel to subscribe
+
+	CHANNEL - Channel to subscribe
 	
-	The redis host and port is hardcoded in the script, change the script if you need.
+* The redis host and port is hardcoded in the script, change the script if you need.
 	
 ## Pubsub demo
 In one shell run the command:
