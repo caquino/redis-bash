@@ -12,10 +12,10 @@ Using the client and the pubsub demo
 redis-bash-cli \<PARAMETERS\> \<COMMAND\> \<ARGUMENTS\>
 
 Parameters:
-    -h Host - Defaults localhost
-    -p Port - Defaults 6379
-    -n DB - Select the database DB
-    -r N - Repeat command N times
+	-h Host - Defaults localhost
+	-p Port - Defaults 6379
+	-n DB - Select the database DB
+	-r N - Repeat command N times
 	
 
 redis-pubsub-test \<CHANNEL\>
@@ -41,7 +41,7 @@ fd: file descriptor to access the redis database
 command: command to be sent to the server, can be blank to do read operation.
 
 Using the library:
-```shell
+```
 #!/bin/bash
 source redis-bash-lib # include the library itself
 exec 6<>/dev/tcp/localhost/6379 # open the connection to the redis server
