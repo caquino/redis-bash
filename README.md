@@ -1,8 +1,8 @@
 REDIS-BASH - Bash library to access Redis Databases
 ==========
-The library comes with two examples, one generic client and a pubsub demo.
-This library has no external dependencies, using only bash built-in commands.
-The only requirement is bash to have net redirections enabled.
+* The library comes with two examples, one generic client and a pubsub demo.
+* This library has no external dependencies, using only bash built-in commands.
+* The only requirement is bash to have net redirections enabled.
 
 Using the client and the pubsub demo
 ----------------
@@ -39,11 +39,11 @@ command: command to be sent to the server, can be blank to do read operation.
 
 Using the library:
 
-`#!/bin/bash
-source redis-bash-lib # include the library itself
-exec 6<>/dev/tcp/localhost/6379 # open the connection to the redis server
-redis-client 6 SET test 1234 # do a SET operation in the redis on the file descriptor 6
-exec 6>&- #close fd`
+	#!/bin/bash
+	source redis-bash-lib # include the library itself
+	exec 6<>/dev/tcp/localhost/6379 # open the connection to the redis server
+	redis-client 6 SET test 1234 # do a SET operation in the redis on the file descriptor 6
+	exec 6>&- #close fd`
 
 
 TODO
