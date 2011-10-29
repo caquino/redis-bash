@@ -6,7 +6,7 @@
 
 ## Using the client and the pubsub demo
 
-* Client
+### Client
 	redis-bash-cli <PARAMETERS> <COMMAND> <ARGUMENTS>
 
 Parameters:
@@ -37,7 +37,7 @@ Examples:
 	redis-bash-cli -h localhost WRONGCOMMAND test
 	ERR unknown command 'WRONGCOMMAND'
 
-* Pubsub
+### Pubsub
 
 	redis-pubsub-test <CHANNEL>
 	
