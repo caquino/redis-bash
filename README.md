@@ -2,9 +2,10 @@
 * The library comes with two examples, one generic client and a pubsub demo.
 * This library has no external dependencies, using only bash built-in commands.
 * The only requirement is bash to have net redirections enabled.
+* The command validation is made by the server.
 
 ## Using the client and the pubsub demo
-redis-bash-cli \<PARAMETERS\> \<COMMAND\> \<ARGUMENTS\>
+	redis-bash-cli <PARAMETERS> <COMMAND> <ARGUMENTS>
 
 Parameters:
 
@@ -31,7 +32,10 @@ Examples:
 	PONG
 	PONG
 	
-redis-pubsub-test \<CHANNEL\>
+	redis-bash-cli -h localhost WRONGCOMMAND test
+	ERR unknown command 'WRONGCOMMAND'
+	
+redis-pubsub-test <CHANNEL>
 	The redis host and port is hardcoded in the script, change the script if you need.
 	
 ## Pubsub demo
@@ -46,7 +50,7 @@ In another shell run the command:
 # Using the Library in your code
 The library have a single function to handle the redis communication.
 
-	redis-client \<FD\> \<COMMAND\>
+	redis-client <FD> <COMMAND>
 
 * FD: file descriptor to access the redis database
 * COMMAND: command to be sent to the server, can be blank to do read operation.
