@@ -60,16 +60,16 @@ Using the library:
 	exec 6>&- #close fd`
 
 
-TODO
-====
+# TODO
 * manual page
 * tests
 
-LICENSE
-=======
+# LICENSE
 * BSD
 
-THANKS
-======
+# Debian Package
+* To build the debian/ubuntu package use dpkg-buildpackage.
+
+# THANKS
 * Andre Ferraz - Debian Package
 * Juliano Martinez - Idea to handle socket disconnections on the pubsub demo
