@@ -67,10 +67,10 @@ The library have a single function to handle the redis communication.
 Using the library:
 
 	#!/bin/bash
-	source redis-bash-lib # include the library itself
-	exec 6<>/dev/tcp/localhost/6379 # open the connection to the redis server
-	redis-client 6 SET test 1234 # do a SET operation in the redis on the file descriptor 6
-	exec 6>&- #close fd`
+	source redis-bash-lib # include the library
+	exec 6<>/dev/tcp/localhost/6379 # open the connection
+	redis-client 6 SET test 1234 # do a SET operation
+	exec 6>&- # close the connection
 
 
 # TODO
