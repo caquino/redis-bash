@@ -7,12 +7,30 @@
 redis-bash-cli \<PARAMETERS\> \<COMMAND\> \<ARGUMENTS\>
 
 Parameters:
-* -h Host - Defaults localhost.
-* -p Port - Defaults 6379.
-* -n DB - Select the database DB.
-* -r N - Repeat command N times.
-	
 
+	-h Host - Defaults localhost.
+	-p Port - Defaults 6379.
+	-n DB - Select the database DB.
+	-r N - Repeat command N times.
+	
+Examples:
+
+	redis-bash-cli -h localhost SET testkey 1234
+	OK
+	
+	redis-bash-cli -h localhost GET testkey
+	1234
+	
+	redis-bash-cli -h localhost PING
+	PONG
+	
+	redis-bash-cli -h localhost -r 5 PING
+	PONG
+	PONG
+	PONG
+	PONG
+	PONG
+	
 redis-pubsub-test \<CHANNEL\>
 	The redis host and port is hardcoded in the script, change the script if you need.
 	
@@ -28,10 +46,10 @@ In another shell run the command:
 # Using the Library
 The library have a single function to handle the redis communication.
 
-redis-client \<fd\> \<command\>
+redis-client \<FD\> \<COMMAND\>
 
-fd: file descriptor to access the redis database
-command: command to be sent to the server, can be blank to do read operation.
+* FD: file descriptor to access the redis database
+* COMMAND: command to be sent to the server, can be blank to do read operation.
 
 Using the library:
 
