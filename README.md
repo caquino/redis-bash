@@ -41,13 +41,13 @@ fd: file descriptor to access the redis database
 command: command to be sent to the server, can be blank to do read operation.
 
 Using the library:
-```
+`
 #!/bin/bash
 source redis-bash-lib # include the library itself
 exec 6<>/dev/tcp/localhost/6379 # open the connection to the redis server
 redis-client 6 SET test 1234 # do a SET operation in the redis on the file descriptor 6
 exec 6>&- #close fd
-```
+`
 
 TODO
 ====
