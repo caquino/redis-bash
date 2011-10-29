@@ -1,21 +1,18 @@
 REDIS-BASH - Bash library to access Redis Databases
 ==========
 The library comes with two examples, one generic client and a pubsub demo.
-
-This library use only bash built-in commands and does not have any external dependencies.
-
-This library requires bash to be compiled with --enable-net-redirections to work.
+This library has no external dependencies, using only bash built-in commands.
+The only requirement is bash to have net redirections enabled.
 
 Using the client and the pubsub demo
 ----------------
-
 redis-bash-cli \<PARAMETERS\> \<COMMAND\> \<ARGUMENTS\>
 
 Parameters:
-	-h Host - Defaults localhost
-	-p Port - Defaults 6379
-	-n DB - Select the database DB
-	-r N - Repeat command N times
+	-h Host - Defaults localhost.
+	-p Port - Defaults 6379.
+	-n DB - Select the database DB.
+	-r N - Repeat command N times.
 	
 
 redis-pubsub-test \<CHANNEL\>
