@@ -16,18 +16,16 @@ Parameters:
 redis-pubsub-test \<CHANNEL\>
 	The redis host and port is hardcoded in the script, change the script if you need.
 	
-Testing
--------
+## Testing
 In one shell run the command:
 
-redis-pubsub-test test
+	redis-pubsub-test test
 
 In another shell run the command:
 
-redis-bash-cli -h localhost -p 6379 PUBLISH test "Hello World."
+	redis-bash-cli -h localhost -p 6379 PUBLISH test "Hello World."
 	
-Using the Library
-=================
+# Using the Library
 The library have a single function to handle the redis communication.
 
 redis-client \<fd\> \<command\>
@@ -46,13 +44,14 @@ Using the library:
 
 TODO
 ====
-- manual page
-- tests
+* manual page
+* tests
 
 LICENSE
 =======
-BSD
+* BSD
 
 THANKS
 ======
-- Andre Ferraz - Debian Package
+* Andre Ferraz - Debian Package
+* Juliano Martinez - Idea to handle socket disconnections on the pubsub demo
