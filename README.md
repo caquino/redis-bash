@@ -34,7 +34,7 @@ Examples:
 redis-pubsub-test \<CHANNEL\>
 	The redis host and port is hardcoded in the script, change the script if you need.
 	
-## Testing
+## Pubsub demo
 In one shell run the command:
 
 	redis-pubsub-test test
@@ -43,10 +43,10 @@ In another shell run the command:
 
 	redis-bash-cli -h localhost -p 6379 PUBLISH test "Hello World."
 	
-# Using the Library
+# Using the Library in your code
 The library have a single function to handle the redis communication.
 
-redis-client \<FD\> \<COMMAND\>
+	redis-client \<FD\> \<COMMAND\>
 
 * FD: file descriptor to access the redis database
 * COMMAND: command to be sent to the server, can be blank to do read operation.
