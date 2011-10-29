@@ -5,6 +5,8 @@
 * The command validation is made by the server.
 
 ## Using the client and the pubsub demo
+
+* Client
 	redis-bash-cli <PARAMETERS> <COMMAND> <ARGUMENTS>
 
 Parameters:
@@ -34,8 +36,14 @@ Examples:
 	
 	redis-bash-cli -h localhost WRONGCOMMAND test
 	ERR unknown command 'WRONGCOMMAND'
+
+* Pubsub
+
+	redis-pubsub-test <CHANNEL>
 	
-redis-pubsub-test <CHANNEL>
+Parameters:
+	* CHANNEL - Channel to subscribe
+	
 	The redis host and port is hardcoded in the script, change the script if you need.
 	
 ## Pubsub demo
