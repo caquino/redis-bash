@@ -1,5 +1,4 @@
-REDIS-BASH - Bash library to access Redis Databases
-==========
+# REDIS-BASH - Bash library to access Redis Databases
 * The library comes with two examples, one generic client and a pubsub demo.
 * This library has no external dependencies, using only bash built-in commands.
 * The only requirement is bash to have net redirections enabled.
