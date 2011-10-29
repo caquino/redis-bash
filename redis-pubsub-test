@@ -5,10 +5,26 @@
 # and on another shell publish a message on the same channel
 # ./redis-bash-cli -h localhost PUBLISH testchannel Hello World
 source /usr/share/redis-bash/redis-bash-lib
+REDISHOST=localhost
+REDISPORT=6379
+while getopts ":h:p:" opt
+do
+    case ${opt} in
+        h) REDISHOST=${OPTARG};;
+        p) REDISPORT=${OPTARG};;
+    esac
+done
+shift $((${OPTIND} - 1))
 while true
 do
     exec 5>&-
-    exec 5<>/dev/tcp/localhost/6379
+    if [ "${REDISHOST}" != "" ] && [ "${REDISPORT}" != "" ]
+    then
+        exec 5<>/dev/tcp/${REDISHOST}/${REDISPORT} # open fd
+    else
+        echo "Wrong arguments"
+        exit 255
+    fi
     redis-client 5 SUBSCRIBE ${1} > /dev/null # subscribe to the pubsub channel in fd 5
     while true
     do

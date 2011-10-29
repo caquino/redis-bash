@@ -39,10 +39,12 @@ Examples:
 
 ### Pubsub
 
-	redis-pubsub-test <CHANNEL>
+	redis-pubsub-test <PARAMETERS> <CHANNEL>
 	
 Parameters:
 
+	-h Host - Defaults localhost.
+	-p Port - Defaults 6379.
 	CHANNEL - Channel to subscribe
 	
 * The redis host and port is hardcoded in the script, change the script if you need.
