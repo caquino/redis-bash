@@ -87,3 +87,7 @@ Using the library:
 # THANKS
 * Andre Ferraz - Debian Package
 * Juliano Martinez - Idea to handle socket disconnections on the pubsub demo
+
+# TESTED
+* Debian squeeze 6.0.3
+* Mac OS X Lion 10.7.2
