@@ -91,3 +91,19 @@ Using the library:
 # TESTED
 * Debian squeeze 6.0.3
 * Mac OS X Lion 10.7.2
+
+# PERFORMANCE
+
+    This test has no intent to be a complete benchmark, but only one idea of the diference between the native cli and the bash one
+
+    time redis-bash-cli -h 192.168.86.1 -r 10 PING > /dev/null
+
+    real0m0.027s
+    user0m0.000s
+    sys0m0.024s
+
+    time redis-cli -h 192.168.86.1 -r 10 PING > /dev/null
+
+    real0m0.012s
+    user0m0.000s
+    sys0m0.008s
