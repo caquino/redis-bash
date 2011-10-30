@@ -94,7 +94,7 @@ Using the library:
 
 # PERFORMANCE
 
-    This test has no intent to be a complete benchmark, but only one idea of the diference between the native cli and the bash one
+* This test has no intent to be a complete benchmark, but only one idea of the diference between the native cli and the bash one
 
     time redis-bash-cli -h 192.168.86.1 -r 10 PING > /dev/null
 
