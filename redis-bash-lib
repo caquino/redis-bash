@@ -27,7 +27,7 @@ function redis-client() {
         \$*) # message size
             [ ${BASH_VERSINFO} -eq 3 ] && SIZEDELIM="n"
             [ ${REPLY:1} -gt 0 ] && read -r -${SIZEDELIM:-N} $[${REPLY:1}+2] -u ${FD} # read again to get the value itself
-            ARGV=( "${REPLY:0:${#REPLY}-1}" );;
+            ARGV=( "${REPLY:0:${#REPLY}-$[${BASH_VERSINFO}-2]}" );;
         :*) # integer message
             ARGV=( "${REPLY:1}" );;
         \**) # bulk reply - recursive based on number of messages
