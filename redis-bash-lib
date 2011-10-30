@@ -22,7 +22,7 @@ function redis-client() {
     fi
     local ARGV
     read -r -u ${FD}
-    REPLY=${REPLY:0:${#REPLY}-1}
+    REPLY=${REPLY:0:${#REPLY}-$[${BASH_VERSINFO}-2]}
     case ${REPLY} in
         -*|\$-*) # error message
             echo "${REPLY:1}"
