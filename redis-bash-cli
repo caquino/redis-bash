@@ -4,6 +4,7 @@
 #set -x
 #PS4='$(date "+%s.%N ($LINENO) + ")'
 source /usr/share/redis-bash/redis-bash-lib
+REDISHOST=localhost
 REDISPORT=6379
 REPEAT=1
 while getopts ":h:n:p:r:" opt
