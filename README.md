@@ -90,14 +90,9 @@ Using the library:
 
 # TESTED
 * Debian squeeze 6.0.3
-
-    GNU bash, version 4.1.5(1)-release (x86_64-pc-linux-gnu)
-    Copyright (C) 2009 Free Software Foundation, Inc.
-
+** GNU bash, version 4.1.5(1)-release (x86_64-pc-linux-gnu)
 * Mac OS X Lion 10.7.2
-
-    GNU bash, version 3.2.48(1)-release (x86_64-apple-darwin11)
-    Copyright (C) 2007 Free Software Foundation, Inc.
+** GNU bash, version 3.2.48(1)-release (x86_64-apple-darwin11)
 
 # PERFORMANCE
 
