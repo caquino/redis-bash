@@ -35,8 +35,8 @@ function redis-client() {
             ARGV=( "${REPLY:1}" );;
         \**) # bulk reply - recursive based on number of messages
             ARGC="${REPLY:1}"
-            [ ${ARGC} -eq 0 ] && ARGV=(0)
-            while [ ${#ARGV[@]} -lt ${ARGC} ]; do
+            unset ARGV
+            for ((ARGC="${REPLY:1}";${ARGC}>0;ARGC--)); do
                 ARGV=("${ARGV[@]}" $(redis-client ${FD}))
             done;;
         +*) # standard message
