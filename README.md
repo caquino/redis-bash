@@ -44,7 +44,7 @@ Authenticated requests:
     redis-bash-cli -h localhost PING
     ERR operation not permitted
 
-    redis-bash-cli -h localhost -a teste PING
+    redis-bash-cli -h localhost -a test PING
     PONG
 
 ### Pubsub
