@@ -25,7 +25,7 @@ Examples:
 	
 	redis-bash-cli -h localhost GET testkey
 	1234
-	
+
 	redis-bash-cli -h localhost PING
 	PONG
 	
@@ -38,6 +38,14 @@ Examples:
 	
 	redis-bash-cli -h localhost WRONGCOMMAND test
 	ERR unknown command 'WRONGCOMMAND'
+
+Authenticated requests:
+
+    redis-bash-cli -h localhost PING
+    ERR operation not permitted
+
+    redis-bash-cli -h localhost -a teste PING
+    PONG
 
 ### Pubsub
 
