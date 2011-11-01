@@ -7,13 +7,16 @@ source /usr/share/redis-bash/redis-bash-lib
 REDISHOST=localhost
 REDISPORT=6379
 REPEAT=1
-while getopts ":h:n:p:r:" opt
+DELAY=0
+while getopts ":h:n:p:r:a:i:" opt
 do
     case ${opt} in
         h) REDISHOST=${OPTARG};;
         n) REDISDB=${OPTARG};;
         p) REDISPORT=${OPTARG};;
         r) REPEAT=${OPTARG};;
+        a) AUTH=${OPTARG};;
+        i) DELAY=${OPTARG};;
     esac
 done
 shift $((${OPTIND} - 1))
@@ -24,6 +27,7 @@ else
     echo "Wrong arguments"
     exit 255
 fi
+[ "${AUTH}" != "" ] && redis-client 6 AUTH ${AUTH} > /dev/null
 [ "${REDISDB}" != "" ] && redis-client 6 SELECT ${REDISDB} > /dev/null
 for ((z=1;z<=${REPEAT};z++))
 do
@@ -31,5 +35,6 @@ do
     if [ $? -ne 0 ]; then
         exit 1
     fi
+    [ ${DELAY} -gt 0 ] && sleep ${DELAY}
 done
 exec 6>&- #close fd

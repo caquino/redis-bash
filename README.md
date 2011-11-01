@@ -15,6 +15,8 @@ Parameters:
 	-p Port - Defaults 6379.
 	-n DB - Select the database DB.
 	-r N - Repeat command N times.
+    -a PASSWORD - Authentication password
+    -i INTERVAL - Interval between commands
 	
 Examples:
 
