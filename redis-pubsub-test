@@ -5,7 +5,14 @@
 # and on another shell publish a message on the same channel
 # ./redis-bash-cli -h localhost PUBLISH testchannel Hello World
 source /usr/share/redis-bash/redis-bash-lib 2> /dev/null
-[ $? -ne 0 ] && source redis-bash-lib
+if [ $? -ne 0 ]; then
+  LIBFOLDER=$(dirname $0)
+  source ${LIBFOLDER}/redis-bash-lib 2> /dev/null
+  if [ $? -ne 0 ]; then
+    echo "can't find redis-bash-lib in /usr/share/redis-bash or ${LIBFOLDER}"
+    exit 127 
+  fi
+fi
 REDISHOST=localhost
 REDISPORT=6379
 while getopts ":h:p:" opt
