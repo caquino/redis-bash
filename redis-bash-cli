@@ -3,7 +3,8 @@
 # Poor man profiling - uncoment the next 2 lines
 #set -x
 #PS4='$(date "+%s.%N ($LINENO) + ")'
-source /usr/share/redis-bash/redis-bash-lib
+source /usr/share/redis-bash/redis-bash-lib 2> /dev/null
+[ $? -ne 0 ] && source redis-bash-lib
 REDISHOST=localhost
 REDISPORT=6379
 REPEAT=1

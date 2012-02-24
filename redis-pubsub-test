@@ -4,7 +4,8 @@
 # ./redis-pubsub-test testchannel
 # and on another shell publish a message on the same channel
 # ./redis-bash-cli -h localhost PUBLISH testchannel Hello World
-source /usr/share/redis-bash/redis-bash-lib
+source /usr/share/redis-bash/redis-bash-lib 2> /dev/null
+[ $? -ne 0 ] && source redis-bash-lib
 REDISHOST=localhost
 REDISPORT=6379
 while getopts ":h:p:" opt
