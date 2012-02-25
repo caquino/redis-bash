@@ -5,7 +5,7 @@
 #PS4='$(date "+%s.%N ($LINENO) + ")'
 source /usr/share/redis-bash/redis-bash-lib 2> /dev/null
 if [ $? -ne 0 ]; then
-  LIBFOLDER=$(dirname $0)
+  LIBFOLDER=${0%/${0##*/}}
   source ${LIBFOLDER}/redis-bash-lib 2> /dev/null
   if [ $? -ne 0 ]; then
     echo "can't find redis-bash-lib in /usr/share/redis-bash or ${LIBFOLDER}"
