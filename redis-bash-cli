@@ -31,6 +31,9 @@ shift $((${OPTIND} - 1))
 if [ "${REDISHOST}" != "" ] && [ "${REDISPORT}" != "" ]
 then
     exec 6<>/dev/tcp/${REDISHOST}/${REDISPORT} # open fd
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
 else
     echo "Wrong arguments"
     exit 255
