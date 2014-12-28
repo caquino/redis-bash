@@ -7,11 +7,13 @@
 ## Using the client and the pubsub demo
 
 ### Client
-	redis-bash-cli <PARAMETERS> <COMMAND> <ARGUMENTS>
+```bash
+$ redis-bash-cli <PARAMETERS> <COMMAND> <ARGUMENTS>
+```
 
 Parameters:
 
-```bash
+```
 -h Host - Defaults localhost.
 -p Port - Defaults 6379.
 -n DB - Select the database DB.
@@ -23,40 +25,40 @@ Parameters:
 Examples:
 
 ```bash
-redis-bash-cli -h localhost SET testkey 1234
+$ redis-bash-cli -h localhost SET testkey 1234
 OK
 
-redis-bash-cli -h localhost GET testkey
+$ redis-bash-cli -h localhost GET testkey
 1234
 
-redis-bash-cli -h localhost PING
+$ redis-bash-cli -h localhost PING
 PONG
 
-redis-bash-cli -h localhost -r 5 PING
+$ redis-bash-cli -h localhost -r 5 PING
 PONG
 PONG
 PONG
 PONG
 PONG
 
-redis-bash-cli -h localhost WRONGCOMMAND test
+$ redis-bash-cli -h localhost WRONGCOMMAND test
 ERR unknown command 'WRONGCOMMAND'
 ```
 
 Authenticated requests:
 
 ```bash
-redis-bash-cli -h localhost PING
+$ redis-bash-cli -h localhost PING
 ERR operation not permitted
 
-redis-bash-cli -h localhost -a test PING
+$ redis-bash-cli -h localhost -a test PING
 PONG
 ```
 
 ### Pubsub
 
 ```bash
-redis-pubsub-test <PARAMETERS> <CHANNEL>
+$ redis-pubsub-test <PARAMETERS> <CHANNEL>
 ```
 	
 Parameters:
@@ -71,20 +73,20 @@ CHANNEL - Channel to subscribe
 In one shell run the command:
 
 ```bash
-redis-pubsub-test test
+$ redis-pubsub-test test
 ```
 
 In another shell run the command:
 
 ```bash
-redis-bash-cli -h localhost -p 6379 PUBLISH test "Hello World."
+$ redis-bash-cli -h localhost -p 6379 PUBLISH test "Hello World."
 ```
 	
 # Using the Library in your code
 The library have a single function to handle the redis communication.
 
 ```bash
-redis-client <FD> <COMMAND>
+$ redis-client <FD> <COMMAND>
 ```
 
 * FD: file descriptor to access the redis database
@@ -129,13 +131,13 @@ This test has no intent to be a complete benchmark, but only to show the diferen
 
 
 ```bash
-time redis-bash-cli -h 192.168.86.1 -r 10 PING > /dev/null
+$ time redis-bash-cli -h 192.168.86.1 -r 10 PING > /dev/null
 
 real0m0.027s
 user0m0.000s
 sys0m0.024s
 
-time redis-cli -h 192.168.86.1 -r 10 PING > /dev/null
+$ time redis-cli -h 192.168.86.1 -r 10 PING > /dev/null
 
 real0m0.012s
 user0m0.000s
