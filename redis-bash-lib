@@ -23,6 +23,12 @@ function redis-client() {
     fi
     local ARGV
     read -r -u ${FD}
+
+    if [ ${#REPLY} -eq 0 ]; then
+        printf "error: no reply\n"
+        exit 1
+    fi
+
     REPLY=${REPLY:0:${#REPLY}-1}
     case ${REPLY} in
         -*|\$-*) # error message
