@@ -96,7 +96,8 @@ Using the library:
 
 # CONTACT
 * email: cassianoaquino at me.com
-* twitter: @djserdan
+* twitter: @syshero
+* blog: http://syshero.org/
 
 # THANKS
 * Andre Ferraz - Debian Package
