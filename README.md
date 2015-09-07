@@ -1,4 +1,6 @@
 # REDIS-BASH - Bash library to access Redis Databases
+
+[![Join the chat at https://gitter.im/caquino/redis-bash](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/caquino/redis-bash?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 * The library comes with two examples, one generic client and a pubsub demo.
 * This library has no external dependencies, using only bash built-in commands.
 * The only requirement is bash to have net redirections enabled.
