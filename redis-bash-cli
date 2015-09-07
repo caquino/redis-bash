@@ -30,22 +30,17 @@ done
 shift $((${OPTIND} - 1))
 if [ "${REDISHOST}" != "" ] && [ "${REDISPORT}" != "" ]
 then
-    exec 6<>/dev/tcp/${REDISHOST}/${REDISPORT} # open fd
-    if [ $? -ne 0 ]; then
-        exit 1
-    fi
+    # open fd
+    exec 6<>/dev/tcp/"$REDISHOST"/"$REDISPORT" || exit
 else
     echo "Wrong arguments"
     exit 255
 fi
-[ "${AUTH}" != "" ] && redis-client 6 AUTH ${AUTH} > /dev/null
-[ "${REDISDB}" != "" ] && redis-client 6 SELECT ${REDISDB} > /dev/null
+[ "${AUTH}" != "" ] && redis-client 6 AUTH "$AUTH" > /dev/null
+[ "${REDISDB}" != "" ] && redis-client 6 SELECT "$REDISDB" > /dev/null
 for ((z=1;z<=${REPEAT};z++))
 do
-    redis-client 6 "${@}"
-    if [ $? -ne 0 ]; then
-        exit 1
-    fi
+    redis-client 6 "$@" || exit
     [ ${DELAY} -gt 0 ] && sleep ${DELAY}
 done
 exec 6>&- #close fd
