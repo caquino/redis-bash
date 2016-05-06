@@ -146,6 +146,3 @@ real0m0.012s
 user0m0.000s
 sys0m0.008s
 ```
-
-# LICENSE
-MIT
