@@ -23,7 +23,7 @@ Parameters:
 -a PASSWORD - Authentication password
 -i INTERVAL - Interval between commands
 ```
-	
+
 Examples:
 
 ```bash
@@ -62,7 +62,7 @@ PONG
 ```bash
 $ redis-pubsub-test <PARAMETERS> <CHANNEL>
 ```
-	
+
 Parameters:
 
 ```bash
@@ -70,7 +70,7 @@ Parameters:
 -p Port - Defaults 6379.
 CHANNEL - Channel to subscribe
 ```
-		
+
 ## Pubsub demo
 In one shell run the command:
 
@@ -83,7 +83,7 @@ In another shell run the command:
 ```bash
 $ redis-bash-cli -h localhost -p 6379 PUBLISH test "Hello World."
 ```
-	
+
 # Using the Library in your code
 The library have a single function to handle the redis communication.
 
@@ -125,7 +125,7 @@ exec 6>&- # close the connection
 * Juliano Martinez - Idea to handle socket disconnections on the pubsub demo
 
 # TESTED
-* Debian squeeze 6.0.X - GNU bash, version 4.1.5(1)-release (x86_64-pc-linux-gnu) 
+* Debian squeeze 6.0.X - GNU bash, version 4.1.5(1)-release (x86_64-pc-linux-gnu)
 * Mac OS X Lion 10.7.X - GNU bash, version 3.2.48(1)-release (x86_64-apple-darwin11)
 
 # PERFORMANCE
@@ -146,3 +146,6 @@ real0m0.012s
 user0m0.000s
 sys0m0.008s
 ```
+
+# LICENSE
+MIT
