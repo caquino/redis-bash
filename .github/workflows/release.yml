@@ -18,10 +18,18 @@ jobs:
       packages: write # required for docker image upload
 
     steps:
+      - name: Get Token
+        id: get_workflow_token
+        uses: ramesh2051/workflow-application-token-action@v1
+        with:
+          application_id: ${{ secrets.APPLICATION_ID }}
+          application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2.2.0
         with:
           fetch-depth: 0
+          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
 
       - name: Patch changelog (snapshot)
         uses: pi-top/git-debian-changelog-bump-action@master
@@ -30,14 +38,9 @@ jobs:
           author_name: ${{ env.CHANGELOG_AUTHOR_NAME }}
           author_email: ${{ env.CHANGELOG_AUTHOR_EMAIL }}
 
-      - name: Commit changelog
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git checkout "${GITHUB_REF:11}"
-          git commit -am "Commit changelog"
-          git push
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply git-debian-changelog-bump-action changes
 
       - name: Determine current version
         run: |
