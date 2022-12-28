@@ -30,6 +30,10 @@ jobs:
           author_name: ${{ env.CHANGELOG_AUTHOR_NAME }}
           author_email: ${{ env.CHANGELOG_AUTHOR_EMAIL }}
 
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply git-debian-changelog-bump-action changes
+
       - name: Determine current version
         run: |
           sudo apt install -y dpkg-dev
@@ -53,6 +57,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true
           
-      - uses: EndBug/add-and-commit@v7
-        with:
-          default_author: github_actions
