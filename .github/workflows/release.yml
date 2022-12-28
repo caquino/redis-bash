@@ -18,18 +18,19 @@ jobs:
       packages: write # required for docker image upload
 
     steps:
-      - name: Get Token
-        id: get_workflow_token
-        uses: ramesh2051/workflow-application-token-action@v1
+      - name: Retrieve app token
+        id: app
+        uses: Flutter-Tech/github-app-token@v2
         with:
-          application_id: ${{ secrets.APPLICATION_ID }}
-          application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+          APP_PEM: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+          APP_ID: ${{ secrets.APPLICATION_ID }}
+          APP_INSTALLATION_ID: ${{ secrets.APPLICATION_INSTALL_ID }}
 
       - name: Checkout code
-        uses: actions/checkout@v2.2.0
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          token: ${{ steps.app.outputs.app_token }}
 
       - name: Patch changelog (snapshot)
         uses: pi-top/git-debian-changelog-bump-action@master
