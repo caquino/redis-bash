@@ -26,6 +26,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ steps.app.outputs.app_token }}
+          ref: ${{ github.ref_name }}
 
       - name: Patch changelog (snapshot)
         uses: pi-top/git-debian-changelog-bump-action@master
@@ -40,9 +41,6 @@ jobs:
           then
             git config --global user.email "${{ env.CHANGELOG_AUTHOR_EMAIL }}"
             git config --global user.name "${{ env.CHANGELOG_AUTHOR_NAME }}"
-            raw=$(git branch -r --contains ${{ github.ref }})
-            branch=${raw##*/}
-            git checkout $branch
             git pull --no-edit
             git add -A
             git commit -m "actions generator update"
