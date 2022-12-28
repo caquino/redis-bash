@@ -39,6 +39,7 @@ jobs:
         run: |
           if [ ! -z "$(git status --porcelain=v1 2>/dev/null)" ]
           then
+            git switch master
             git config --global user.email "${{ env.CHANGELOG_AUTHOR_EMAIL }}"
             git config --global user.name "${{ env.CHANGELOG_AUTHOR_NAME }}"
             git pull --no-edit
