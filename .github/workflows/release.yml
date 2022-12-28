@@ -34,10 +34,6 @@ jobs:
           author_name: ${{ env.CHANGELOG_AUTHOR_NAME }}
           author_email: ${{ env.CHANGELOG_AUTHOR_EMAIL }}
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Apply git-debian-changelog-bump-action changes
-
       - name: Apply git-debian-changelog-bump-action changes
         run: |
           if [ ! -z "$(git status --porcelain=v1 2>/dev/null)" ]
