@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  CHANGELOG_AUTHOR_NAME: "GitHub Actions"
+  CHANGELOG_AUTHOR_EMAIL: "no-reply@actions.github.com"
+
+jobs:
+  build-debian-package:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Patch changelog (snapshot)
+        uses: pi-top/git-debian-changelog-bump-action@master
+        with:
+          release: false
+          author_name: ${{ env.CHANGELOG_AUTHOR_NAME }}
+          author_email: ${{ env.CHANGELOG_AUTHOR_EMAIL }}
+
+      - name: Determine current version
+        run: |
+          sudo apt install -y dpkg-dev
+          echo "CURRENT_VERSION=$(dpkg-parsechangelog -Sversion)" >> $GITHUB_ENV
+
+      - uses: jtdor/build-deb-action@v1
+        env:
+          DEB_BUILD_OPTIONS: noautodbgsym
+        with:
+          buildpackage-opts: --build=binary --no-sign
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: redis-bash-${{ env.CURRENT_VERSION }}-all.deb
+          path: debian/artifacts/redis-bash-${{ env.CURRENT_VERSION }}-all.deb
