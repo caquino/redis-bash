@@ -52,15 +52,7 @@ jobs:
           files: debian/artifacts/redis-bash_${{ env.CURRENT_VERSION }}_all.deb
           token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true
-
-      - name: Push changes
-        run: |
-          if [ ! -z "$(git status --porcelain=v1 2>/dev/null)" ]
-          then
-            git config --global user.email "${{env.CHANGELOG_AUTHOR_EMAIL}}"
-            git config --global user.name "${{env.CHANGELOG_AUTHOR_NAME}}"
-            git pull --no-edit
-            git add -A
-            git commit -m "actions update"
-            git push
-          fi
+          
+      - uses: EndBug/add-and-commit@v7
+        with:
+          default_author: github_actions
