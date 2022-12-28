@@ -38,5 +38,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: redis-bash-${{ env.CURRENT_VERSION }}-all.deb
-          path: debian/artifacts/redis-bash-${{ env.CURRENT_VERSION }}-all.deb
+          name: redis-bash_${{ env.CURRENT_VERSION }}_all.deb
+          path: debian/artifacts/redis-bash_${{ env.CURRENT_VERSION }}_all.deb
