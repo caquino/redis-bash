@@ -6,16 +6,12 @@ on:
       - 'v*.*.*'
 
 env:
-  CHANGELOG_AUTHOR_NAME: "GitHub Actions"
-  CHANGELOG_AUTHOR_EMAIL: "no-reply@actions.github.com"
+  CHANGELOG_AUTHOR_NAME: "github-actions[bot]"
+  CHANGELOG_AUTHOR_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
 
 jobs:
   build-debian-package:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write # required for releases
-      packages: write # required for docker image upload
 
     steps:
       - name: Retrieve app token
@@ -29,7 +25,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
           token: ${{ steps.app.outputs.app_token }}
 
       - name: Patch changelog (snapshot)
@@ -42,6 +37,18 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Apply git-debian-changelog-bump-action changes
+
+      - name: Apply git-debian-changelog-bump-action changes
+        run: |
+          if [ ! -z "$(git status --porcelain=v1 2>/dev/null)" ]
+          then
+            git config --global user.email "${{ env.CHANGELOG_AUTHOR_EMAIL }}"
+            git config --global user.name "${{ env.CHANGELOG_AUTHOR_NAME }}"
+            git pull --no-edit
+            git add -A
+            git commit -m "actions generator update"
+            git push
+          fi
 
       - name: Determine current version
         run: |
