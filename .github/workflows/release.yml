@@ -11,7 +11,12 @@ env:
 
 jobs:
   build-debian-package:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # required for releases
+      packages: write # required for docker image upload
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.2.0
@@ -21,7 +26,7 @@ jobs:
       - name: Patch changelog (snapshot)
         uses: pi-top/git-debian-changelog-bump-action@master
         with:
-          release: false
+          release: true
           author_name: ${{ env.CHANGELOG_AUTHOR_NAME }}
           author_email: ${{ env.CHANGELOG_AUTHOR_EMAIL }}
 
@@ -40,3 +45,10 @@ jobs:
         with:
           name: redis-bash_${{ env.CURRENT_VERSION }}_all.deb
           path: debian/artifacts/redis-bash_${{ env.CURRENT_VERSION }}_all.deb
+
+      - name: Create a GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: debian/artifacts/redis-bash_${{ env.CURRENT_VERSION }}_all.deb
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generate_release_notes: true
