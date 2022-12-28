@@ -1,3 +1,29 @@
+redis-bash (1.0.1) unstable; urgency=medium
+
+  * Catch "no reply" error.
+  * fix license.
+  * Support Bash v5 and drop support for bash version < 3
+  * Create LICENSE
+  * add github actions workflow
+  * change artifact name
+  * change workflow
+  * copy redis-pubsub-test to dest on install
+  * commit back changelog changes
+  * workflow changes
+  * workflow changes
+  * bump checkout action
+  * change workflow
+  * add app to workflow
+  * change app flow
+  * fix
+  * remove action
+  * add checkout
+  * changes
+  * add master
+  * add depth to checkout
+
+ -- github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>  Wed, 28 Dec 2022 13:03:45 +0000
+
 redis-bash (1.0.0) unstable; urgency=low
 
   * Initial Release.
