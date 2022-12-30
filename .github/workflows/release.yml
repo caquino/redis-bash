@@ -45,7 +45,7 @@ jobs:
             git config --global user.name "${{ env.CHANGELOG_AUTHOR_NAME }}"
             git pull --no-edit
             git add -A
-            git commit -m "actions generator update"
+            git commit -m "git-debian-changelog-bump-action changes"
             git push
           fi
 
