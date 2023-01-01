@@ -36,7 +36,7 @@ else
     echo "Wrong arguments"
     exit 255
 fi
-[ "${AUTH}" != "" ] && redis-client 6 AUTH "$AUTH" > /dev/null
+[ "${AUTH}" != "" ] && redis-client 6 AUTH $AUTH > /dev/null
 [ "${REDISDB}" != "" ] && redis-client 6 SELECT "$REDISDB" > /dev/null
 for ((z=1;z<=${REPEAT};z++))
 do
