@@ -21,6 +21,7 @@ Parameters:
 -n DB - Select the database DB.
 -r N - Repeat command N times.
 -a PASSWORD - Authentication password
+   OR -a "USERNAME PASSWORD" - Authentication username & password in double quotes
 -i INTERVAL - Interval between commands
 ```
 
